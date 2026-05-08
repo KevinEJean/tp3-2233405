@@ -131,7 +131,6 @@ services:
 volumes:
     portainer_data:
     nextclouddb:
-    jellyfin_data:
 # Création du réseau cloud (ou les conteneurs vont être lancés)
 networks:
     cloud:
