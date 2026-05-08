@@ -1,0 +1,83 @@
+services:
+  nextclouddb:
+    # Image mariadb officielle pour entreposer les données de nextcloud
+    image: mysql:8.0
+    # Nom donné au conteneur 
+    container_name: nextcloud-db 
+    # Dans le cas où le conteneur s'arrête/crash, il est automatiquement relancé 
+    restart: unless-stopped 
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    # Réseau dans lequel le conteneur va s'exécuter (dans le même réseau que nextcloud)
+    networks: 
+      - cloud
+    # Volumes du conteneur: mappe un répertoire du conteneur vers un volume docker pour faire persister les données
+    volumes:
+      - nextclouddb:/var/lib/mysql
+    # Variables d'environnement passés au conteneur lors de son lancement
+    environment:
+      - PUID=1000
+      - PGID=1000
+      # Timezone
+      - TZ=America/Montreal
+      # Indentifiants, mots de passe de la base de données
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+  nextcloud:
+    # Image nextcloud officielle 
+    image: nextcloud
+    # Nom donné au conteneur 
+    container_name: nextcloud
+    # Dans le cas où le conteneur s'arrête/crash, il est automatiquement relancé 
+    restart: unless-stopped
+    # Réseau dans lequel le conteneur va s'exécuter (dans le même réseau que la BD)
+    networks:
+      - cloud
+    # Attend que la base de données se lance avant de se lancer
+    depends_on:
+      - nextclouddb 
+    # Mappage de port (du port 80 du conteneur vers le port 8081 de la machine hôte)
+    ports:
+      - 8081:80
+    # Volumes du conteneur: mappe un répertoire du conteneur vers un répertoire de la machine hôte
+    volumes:
+      - ./html:/var/www/html 
+      - ./custom_apps:/var/www/html/custom_apps
+      - ./config:/var/www/html/config
+      - ./data:/var/www/html/data
+    # Variables d'environnement passés au conteneur lors de son lancement
+    environment:
+      - PUID=1000 # ID de l'utilisateur (dans le conteneur)
+      - PGID=1000 # ID du groupe (dans le conteneur)
+      - TZ=America/Montreal # Timezone
+      # Indentifiants, mots de passe de la base de données
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_HOST=nextclouddb
+  portainer:
+    # Image de portainer officielle (ce=community edition, alpine=légère) 
+    image: portainer/portainer-ce:alpine
+    # Nom donné au conteneur 
+    container_name: portainer
+    # Dans le cas où le conteneur s'arrête/crash, il est automatiquement relancé 
+    restart: unless-stopped
+    # Réseau docker dans lequel le conteneur va s'exécuter
+    networks: 
+        - cloud
+    # Mappage de port (du port 9000 du conteneur vers le port 9000 de la machine hôte)
+    ports:
+      - 9000:9000
+    # Volumes 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  # Définition des volumes des conteneurs (portainer et bd)
+  volumes:
+    portainer_data:
+    nextclouddb:
+  # Création du réseau cloud (ou les conteneurs vont être lancés)
+  networks:
+    cloud:
+        driver: bridge
