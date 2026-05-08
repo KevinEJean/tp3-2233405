@@ -73,11 +73,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-  # Définition des volumes des conteneurs (portainer et bd)
-  volumes:
-    portainer_data:
-    nextclouddb:
-  # Création du réseau cloud (ou les conteneurs vont être lancés)
-  networks:
-    cloud:
-        driver: bridge
+# Définition des volumes des conteneurs (portainer et bd)
+volumes:
+  portainer_data:
+  nextclouddb:
+# Création du réseau cloud (ou les conteneurs vont être lancés)
+networks:
+  cloud:
+      driver: bridge
