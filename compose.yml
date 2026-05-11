@@ -168,7 +168,7 @@ services:
       paperless:
 
   tika:
-    image: apache/tika:2.9.1
+    image: apache/tika:latest
     restart: unless-stopped
     networks:
       paperless:
