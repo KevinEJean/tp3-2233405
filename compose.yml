@@ -224,7 +224,7 @@ volumes:
 # Création du réseau cloud (ou les conteneurs vont être lancés)
 networks:
     paperless:
-      proxy:
-        external: true
+    proxy:
+      external: true
     cloud:
         driver: bridge
