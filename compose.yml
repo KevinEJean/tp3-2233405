@@ -168,7 +168,7 @@ services:
       paperless:
 
   tika:
-    image: ghcr.io/paperless-ngx/tika:latest
+    image: apache/tika:2.9.1
     restart: unless-stopped
     networks:
       paperless:
