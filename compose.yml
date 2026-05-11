@@ -131,7 +131,7 @@ services:
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
-      PAPERLESS_URL: https://paperless.tp3-kev.duckdns.org
+      PAPERLESS_URL: `https://paperless.${MY_DOMAIN}`
       PAPERLESS_ADMIN_USER: paperless
       PAPERLESS_ADMIN_PASSWORD: paperless
       PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
@@ -143,11 +143,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.entrypoints=web"
-      - "traefik.http.routers.paperless.rule=Host(`paperless.jimsgarage.co.uk`)"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.${MY_DOMAIN}`)"
       - "traefik.http.middlewares.paperless-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.paperless.middlewares=paperless-https-redirect"
       - "traefik.http.routers.paperless-secure.entrypoints=websecure"
-      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.tp3-kev.duckdns.org`)"
+      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.${MY_DOMAIN}`)"
       - "traefik.http.routers.paperless-secure.tls=true"
       - "traefik.http.routers.paperless-secure.tls.certresolver=letsencrypt" # change this to your cert resolver
       - "traefik.http.routers.paperless-secure.service=paperless" 
