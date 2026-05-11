@@ -225,6 +225,6 @@ volumes:
 networks:
     paperless:
     proxy:
-      external: true
+        external: true
     cloud:
         driver: bridge
