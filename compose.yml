@@ -147,7 +147,7 @@ services:
       - "traefik.http.middlewares.paperless-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.paperless.middlewares=paperless-https-redirect"
       - "traefik.http.routers.paperless-secure.entrypoints=websecure"
-      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.jimsgarage.co.uk`)"
+      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.tp3-kev.duckdns.org`)"
       - "traefik.http.routers.paperless-secure.tls=true"
       - "traefik.http.routers.paperless-secure.tls.certresolver=letsencrypt" # change this to your cert resolver
       - "traefik.http.routers.paperless-secure.service=paperless" 
